@@ -1,0 +1,60 @@
+name: Multi-OS System Info
+
+on: [push]
+
+jobs:
+  ubuntu-info:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print system info
+        run: |
+          uname -a
+          lsb_release -a || true
+      - name: Capture metadata
+        run: |
+          echo "COMMIT_SHA=${GITHUB_SHA}" > meta.txt
+          echo "REPO_NAME=${GITHUB_REPOSITORY}" >> meta.txt
+          echo "WORKSPACE=${GITHUB_WORKSPACE}" >> meta.txt
+      - name: Upload metadata artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ubuntu-meta
+          path: meta.txt
+
+  macos-info:
+    runs-on: macos-latest
+    steps:
+      - name: Print system info
+        run: |
+          uname -a
+          sw_vers
+      - name: Capture metadata
+        run: |
+          echo "COMMIT_SHA=${GITHUB_SHA}" > meta.txt
+          echo "REPO_NAME=${GITHUB_REPOSITORY}" >> meta.txt
+          echo "WORKSPACE=${GITHUB_WORKSPACE}" >> meta.txt
+      - name: Upload metadata artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-meta
+          path: meta.txt
+
+  windows-info:
+    runs-on: windows-latest
+    if: always()
+    needs: [ubuntu-info]
+    steps:
+      - name: Print system info
+        run: |
+          systeminfo
+          echo %OS%
+      - name: Capture metadata
+        run: |
+          echo COMMIT_SHA=%GITHUB_SHA%> meta.txt
+          echo REPO_NAME=%GITHUB_REPOSITORY%>> meta.txt
+          echo WORKSPACE=%GITHUB_WORKSPACE%>> meta.txt
+      - name: Upload metadata artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-meta
+          path: meta.txt
