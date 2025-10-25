@@ -1,0 +1,50 @@
+name: Weekly artifact cleanup
+
+on:
+  schedule:
+    - cron: '0 2 * * 1' # weekly: every Monday at 02:00 UTC
+
+permissions:
+  contents: read
+  packages: write
+  actions: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cleanup old artifacts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MAX_AGE_DAYS: 30
+        run: |
+          python - <<'PY'
+          import os, requests, datetime
+          token = os.environ['GITHUB_TOKEN']
+          headers = {'Authorization': f'token {token}'}
+          repo = os.environ['GITHUB_REPOSITORY']
+          max_age_days = int(os.environ['MAX_AGE_DAYS'])
+          cutoff = datetime.datetime.utcnow() - datetime.timedelta(days=max_age_days)
+
+          base = "https://api.github.com"
+          artifacts_url = f"{base}/repos/{repo}/actions/artifacts"
+          total_deleted = 0
+          while artifacts_url:
+            r = requests.get(artifacts_url, headers=headers)
+            r.raise_for_status()
+            data = r.json()
+            for a in data.get('artifacts', []):
+              created_at = datetime.datetime.strptime(a['created_at'], "%Y-%m-%dT%H:%M:%SZ")
+              if created_at < cutoff:
+                del_url = f"{base}/repos/{repo}/actions/artifacts/{a['id']}"
+                dr = requests.delete(del_url, headers=headers)
+                if dr.status_code == 204:
+                  print("Deleted artifact", a['name'])
+                  total_deleted += 1
+            artifacts_url = data.get('next')  # pagination not fully handled here
+          print("Total deleted:", total_deleted)
+          print("Cleanup time (UTC):", datetime.datetime.utcnow().isoformat())
+          PY
