@@ -1,0 +1,16 @@
+name: Multi-trigger
+
+on:
+  push: {}
+  pull_request: {}
+  schedule:
+    - cron: '0 0 * * *'   # daily at midnight UTC
+
+jobs:
+  log-trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log trigger and timestamp
+        run: |
+          echo "Trigger: ${{ github.event_name }}"
+          echo "Timestamp (UTC): $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
