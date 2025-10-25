@@ -2,20 +2,25 @@ name: Download artifact on successful build
 
 on:
   workflow_run:
-    workflows: ["Build and upload artifact"]
+    workflows: ["Build and upload artifact"]  # MUST match the build workflow's `name:` exactly
     types:
       - completed
 
+permissions:
+  actions: read   # allow reading artifacts
+
 jobs:
   download:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}  # only run on successful build
     runs-on: ubuntu-latest
     steps:
+      - name: Show triggering workflow run id
+        run: |
+          echo "Triggering run id: ${{ github.event.workflow_run.id }}"
+          echo "Triggering run artifacts url: ${{ github.event.workflow_run.artifacts_url || 'n/a' }}"
+
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
           name: dist-zip
           path: ./downloaded
-
-      - name: List files
-        run: ls -la downloaded
