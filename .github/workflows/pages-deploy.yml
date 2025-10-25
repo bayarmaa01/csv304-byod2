@@ -1,60 +1,30 @@
-name: Build and Deploy to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 permissions:
-  contents: write   # needed for deployment
+  contents: write
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Cache node
-        id: cache-node
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.npm
-            node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-
-      - name: Install
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-
-      - name: Archive production artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: site-dist
-          path: ./dist
-
   deploy:
-    needs: build
     runs-on: ubuntu-latest
-    if: success() && github.ref == 'refs/heads/main'
+    
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: site-dist
-          path: ./dist
-
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Prepare build directory
+        run: |
+          echo "Preparing static site..."
+          mkdir -p dist
+          cp -r public/* dist/
+          echo "Build timestamp: $(date)" >> dist/build-info.txt
+      
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
           publish_branch: gh-pages
-          github_token: ${{ secrets.GITHUB_TOKEN }}
