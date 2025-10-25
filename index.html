@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My CI/CD Project</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to My CI/CD Project</h1>
+        <p>This site is automatically deployed via GitHub Actions!</p>
+        <div class="info">
+            <h2>Project Features:</h2>
+            <ul>
+                <li>Automated CI/CD Pipeline</li>
+                <li>GitHub Actions Workflows</li>
+                <li>Automatic Deployment to GitHub Pages</li>
+                <li>Build Caching for Performance</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+EOF
+
+# Create style.css
+cat > public/style.css << 'EOF'
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.container {
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    max-width: 600px;
+    width: 100%;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+p {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.info {
+    background: #f5f5f5;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.info h2 {
+    color: #667eea;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+}
+
+.info ul {
+    list-style-position: inside;
+    color: #555;
+}
+
+.info li {
+    padding: 5px 0;
+}
