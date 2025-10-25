@@ -1,0 +1,22 @@
+name: Deploy to protected environment
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://example.com
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: npm ci && npm run build
+
+      - name: Deploy
+        run: |
+          echo "Deploying to production..."
+          # use secret
+          ./deploy.sh "${{ secrets.DEPLOY_TOKEN }}"
