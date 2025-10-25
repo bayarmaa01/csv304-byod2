@@ -1,0 +1,21 @@
+name: Download artifact on successful build
+
+on:
+  workflow_run:
+    workflows: ["Build and upload artifact"]
+    types:
+      - completed
+
+jobs:
+  download:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-zip
+          path: ./downloaded
+
+      - name: List files
+        run: ls -la downloaded
