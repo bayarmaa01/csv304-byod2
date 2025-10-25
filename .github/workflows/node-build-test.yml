@@ -1,4 +1,4 @@
-name: Node CI - build and test
+name: Node CI - Build and Test
 
 on:
   push:
@@ -8,27 +8,28 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Use Node.js 18
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: Install dependencies (ci if lockfile exists)
+      - name: Install dependencies
         run: |
-          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
-            echo "Lockfile found, running npm ci"
+          if [ -f package-lock.json ]; then
+            echo "Lockfile found, using npm ci"
             npm ci
           else
-            echo "No lockfile, running npm install"
+            echo "No lockfile found, using npm install"
             npm install
           fi
 
-      - name: Build
-        run: npm run build
+      - name: Build project
+        run: npm run build --if-present
 
       - name: Run tests
         run: npm test

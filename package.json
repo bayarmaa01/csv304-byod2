@@ -1,0 +1,24 @@
+{
+  "name": "byod",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run your-build-script",
+    "test": "npm run your-test-script"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bayarmaa01/csv304-byod2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bayarmaa01/csv304-byod2/issues"
+  },
+  "homepage": "https://github.com/bayarmaa01/csv304-byod2#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
