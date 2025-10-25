@@ -1,0 +1,31 @@
+name: Test Upload and Download Artifact
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create test dist
+        run: |
+          mkdir -p dist
+          echo "hello world" > dist/index.html
+          zip -r dist.zip dist
+
+      - name: Upload test artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-zip
+          path: dist.zip
+
+      - name: Download test artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-zip
+          path: downloaded
+
+      - name: Show downloaded file
+        run: |
+          ls -la downloaded
+          unzip -l downloaded/dist.zip
