@@ -1,46 +1,46 @@
 name: Manual Approval Deployment
-   
-   on:
-     push:
-       branches: [main]
-   
-   jobs:
-     build:
-       runs-on: ubuntu-latest
-       
-       steps:
-         - name: Checkout code
-           uses: actions/checkout@v3
-         
-         - name: Build application
-           run: |
-             echo "Building application..."
-             mkdir -p build
-             echo "Build artifact" > build/app.txt
-         
-         - name: Upload build artifact
-           uses: actions/upload-artifact@v3
-           with:
-             name: production-build
-             path: build/
-     
-     deploy:
-       needs: build
-       runs-on: ubuntu-latest
-       environment:
-         name: production
-         url: https://example.com
-       
-       steps:
-         - name: Download build artifact
-           uses: actions/download-artifact@v3
-           with:
-             name: production-build
-             path: ./build
-         
-         - name: Deploy to production
-           run: |
-             echo "Deploying to production environment..."
-             echo "Deployment timestamp: $(date)"
-             ls -la ./build
-             echo "Deployment completed successfully!"
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Build application
+        run: |
+          echo "Building application..."
+          mkdir -p build
+          echo "Build artifact" > build/app.txt
+      
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: production-build
+          path: build/
+  
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://example.com
+    
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: production-build
+          path: ./build
+      
+      - name: Deploy to production
+        run: |
+          echo "Deploying to production environment..."
+          echo "Deployment timestamp: $(date)"
+          ls -la ./build
+          echo "Deployment completed successfully!"
