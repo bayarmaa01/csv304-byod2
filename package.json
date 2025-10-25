@@ -1,24 +1,12 @@
 {
-  "name": "byod",
+  "name": "my-cicd-project",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "CI/CD project with GitHub Actions and Pages",
   "scripts": {
-    "build": "echo \"Building project...\"",
-    "test": "echo \"Running tests... All tests passed!\" && exit 0"
+    "build": "mkdir -p dist && cp -r public/* dist/",
+    "test": "echo 'All tests passed!' && exit 0"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/bayarmaa01/csv304-byod2.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/bayarmaa01/csv304-byod2/issues"
-  },
-  "homepage": "https://github.com/bayarmaa01/csv304-byod2#readme",
-  "description": "",
-  "dependencies": {
-    "express": "^5.1.0"
-  }
+  "keywords": ["cicd", "github-actions", "github-pages"],
+  "author": "Bayarmaa",
+  "license": "MIT"
 }
